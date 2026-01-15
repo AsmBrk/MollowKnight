@@ -304,7 +304,7 @@ public class Enemy_sc : MonoBehaviour
         float distance = Vector2.Distance(transform.position, playerTarget.transform.position);
         Debug.Log("Attack kontrol - Mesafe: " + distance.ToString("F2"));
         
-        if (distance < 3.0f)
+        if (distance < 1.5f)
         {
             if (anim != null) anim.SetTrigger("Attack");
             Debug.Log("✓ Enemy Attack! Knight'a " + 1 + " hasar!");
