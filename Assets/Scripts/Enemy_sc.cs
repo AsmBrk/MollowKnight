@@ -7,16 +7,16 @@ public class Enemy_sc : MonoBehaviour
     public float moveSpeed = 3f;
     
     [Header("AI Settings")]
-    public bool trainMode = false; // EĞİTİM YAPARKEN TİKLE
-    public bool loadAIFromDisk = true; // AI MODELINI YÜKLESİN
-    public float decisionRate = 0.1f; // Daha hızlı karar verme (0.2 -> 0.1)
+    public bool trainMode = false; 
+    public bool loadAIFromDisk = true; 
+    public float decisionRate = 0.1f; 
 
     [Header("Dash Ayarları")]
-    public float dashCooldown = 1.5f; // Dash attıktan sonra 1.5 sn beklesin
-    private float lastDashTime = -99f; // Sayacın başlangıcı
+    public float dashCooldown = 1.5f; 
+    private float lastDashTime = -99f; 
 
-    // MENÜDEN GELEN GLOBAL DEĞİŞKENLER
-    public static bool LoadAIFromDisk = true;  // Kaydedilen modeli otomatik yükle
+    
+    public static bool LoadAIFromDisk = true;  
     public static bool TrainMode = false; 
 
     private Rigidbody2D rb;
@@ -47,7 +47,7 @@ public class Enemy_sc : MonoBehaviour
     private int lastAction = -1;
     private string lastStateKey;
 
-    // --- YENİ EKLENEN DEĞİŞKEN (Sadece burada tanımlı olacak) ---
+    
     private float prevDistance = 999f; 
 
     void Awake()
@@ -60,8 +60,7 @@ public class Enemy_sc : MonoBehaviour
 
     void Start()
     {
-        // --- BU SATIRLARI EKLE (EŞİTLEME) ---
-        // Menüden gelen emri (Static), yerel değişkene (Inspector) aktar.
+        
         loadAIFromDisk = LoadAIFromDisk; 
         trainMode = TrainMode;
         // ------------------------------------
@@ -70,7 +69,7 @@ public class Enemy_sc : MonoBehaviour
         playerTarget = GameObject.FindGameObjectWithTag("Player");
         originalGravity = rb.gravityScale;
 
-        // Başlangıç mesafesini ölçelim
+        
         if(playerTarget != null)
             prevDistance = Vector2.Distance(transform.position, playerTarget.transform.position);
 
@@ -78,8 +77,7 @@ public class Enemy_sc : MonoBehaviour
         {
             RegisterActions();
 
-            // AI modunun başlatılması
-            // ARTIK BURASI DOĞRU ÇALIŞACAK ÇÜNKÜ EŞİTLEDİK
+        
             if (loadAIFromDisk && !trainMode) 
             {
                 bool success = qBrain.LoadModel();
@@ -122,26 +120,26 @@ public class Enemy_sc : MonoBehaviour
         {
             decisionTimer = decisionRate;
             
-            // 1. Mevcut durumu algıla
+    
             List<float> currentInputs = GetSensorInputs();
             qBrain.SetInputs(currentInputs);
             
-            // State key oluştur 
+            
             string currentStateKey = string.Join("_", currentInputs);
 
-            // 2. Eğitim modundaysak ve önceki hareket varsa ÖDÜL VER
+            
             if (trainMode && lastAction != -1)
             {
-                float reward = CalculateReward(); // Yeni zeki ödül sistemi burada çalışıyor
+                float reward = CalculateReward(); 
                 qBrain.UpdateQTable(lastStateKey, lastAction, reward, currentStateKey);
                 Debug.Log($"EĞİTİM: State {lastStateKey} -> Action {lastAction} -> Reward {reward:F2}");
             }
 
-            // 3. Karar Ver ve Uygula
+            
             int actionIndex = qBrain.DecideAction();
             qBrain.ExecuteAction(actionIndex);
 
-            // 4. Kayıt Tut
+            
             lastInputs = currentInputs;
             lastStateKey = currentStateKey;
             lastAction = actionIndex;
@@ -183,7 +181,7 @@ public class Enemy_sc : MonoBehaviour
         return inputs;
     }
 
-    // --- ÖDÜL SİSTEMİ (Geliştirilmiş) ---
+    // --- ÖDÜL SİSTEMİ  ---
     private float CalculateReward()
     {
         float currentDistance = Vector2.Distance(transform.position, playerTarget.transform.position);
@@ -210,7 +208,7 @@ public class Enemy_sc : MonoBehaviour
         // 4. Uzaklaşma cezası
         else
         {
-            reward = -2.0f; // Ceza arttırıldı (daha kesin saldırması için)
+            reward = -2.0f; 
         }
 
         prevDistance = currentDistance;
@@ -267,29 +265,26 @@ public class Enemy_sc : MonoBehaviour
 
     public void Dash()
     {
-        // KONTROLLER:
-        // 1. canDash: Havada hakkı var mı? (Update içinde yere basınca true oluyor)
-        // 2. !isDashing: Şu an zaten kayıyor mu?
-        // 3. Time.time...: Cooldown süresi doldu mu? (Spam Engeli)
+        
         if (canDash && !isDashing && Time.time >= lastDashTime + dashCooldown)
         {
-            lastDashTime = Time.time; // Saati kur, cooldown başlasın
+            lastDashTime = Time.time; 
 
             isDashing = true;
-            canDash = false; // HAKKINI KULLANDI (Yere değene kadar bir daha atamaz)
+            canDash = false; 
             
             originalGravity = rb.gravityScale; // Yerçekimini kaydet
             rb.gravityScale = 0f; // Yerçekimini kapat (Havada düz gitmesi için)
             rb.linearVelocity = Vector2.zero; // Mevcut hızı sıfırla
 
-            // Animasyon veya efekt yok, sadece Debug mesajı
+            //  Debug mesajı
             Debug.Log("✓ Enemy Dash Attı! (Cooldown Başladı)");
             
-            // Yön belirle ve fırlat
+            
             float dashDir = facingRight ? 1f : -1f;
             rb.linearVelocity = new Vector2(dashDir * dashSpeed, 0);
             
-            // Süre bitince durdur
+            
             Invoke(nameof(StopDash), dashTime);
         }
     }
