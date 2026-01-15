@@ -8,14 +8,13 @@ public class MainMenu_sc : MonoBehaviour
     public AudioMixer audioMixer;
     public Toggle aiToggle; 
 
-    // --- BU FONKSİYON EKSİKTİ, BUNU EKLEDİK ---
     void Start()
     {
-        // 1. Menü açılır açılmaz önceki oyundan kalan hafızayı sil
+        
         Enemy_sc.LoadAIFromDisk = false;
         Enemy_sc.TrainMode = false;
 
-        // 2. Kutucuğu da görsel olarak boşalt (Tiki kaldır)
+       
         if (aiToggle != null)
         {
             aiToggle.isOn = false;
@@ -23,7 +22,7 @@ public class MainMenu_sc : MonoBehaviour
 
         Debug.Log("Menü Başladı: Tüm ayarlar sıfırlandı.");
     }
-    // -------------------------------------------
+   
 
     public void PlayGame()
     {
@@ -35,11 +34,11 @@ public class MainMenu_sc : MonoBehaviour
         }
         else
         {
-            // Eğer kutucuğu sürüklemeyi unuttuysan varsayılan olarak KAPALI olsun
+            
             Enemy_sc.LoadAIFromDisk = false; 
         }
 
-        Enemy_sc.TrainMode = false; // Normal modda olduğumuz kesinleşsin
+        Enemy_sc.TrainMode = false; 
         SceneManager.LoadScene("Sahnem"); 
     }
 
