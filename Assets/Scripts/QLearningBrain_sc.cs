@@ -7,12 +7,12 @@ using System.Linq;
 public class QLearningBrain : MonoBehaviour
 {
     [Header("General Settings")]
-    public float learningRate = 0.3f; // Hızlı öğrenme için arttırıldı
+    public float learningRate = 0.3f; 
     public float discount = 0.95f;
-    public float exploration = 0.5f; // Epsilon
+    public float exploration = 0.5f; 
 
     [Header("File Settings")]
-    public string saveFileName = "enemy_brain.json"; // Dosya adı
+    public string saveFileName = "enemy_brain.json"; 
 
     // Input ve Aksiyon Tanımları
     private List<float> currentInputs = new(); 
@@ -37,7 +37,7 @@ public class QLearningBrain : MonoBehaviour
         }
     }
 
-    // --- JSON SERIALIZATION WRAPPER (Unity Dictionary kaydetmez, bu yüzden gerekli) ---
+    
     [Serializable]
     private class SaveWrapper
     {
@@ -51,17 +51,16 @@ public class QLearningBrain : MonoBehaviour
         public float[] values;
     }
 
-    // --- UNITY ---
+    
     void Awake()
     {
-        // Dosya yolunu belirle (Proje root klasörü içine)
-        // Application.dataPath = ".../Assets", bu yüzden bir üst klasöre çık
+        
         string projectRoot = Directory.GetParent(Application.dataPath).FullName;
         savePath = Path.Combine(projectRoot, saveFileName);
-        // NOT: Otomatik yüklemeyi kaldırdım. Enemy_sc kontrol edecek.
+        
     }
 
-    // --- PUBLIC API ---
+    
 
     public void SetInputs(List<float> inputs)
     {
