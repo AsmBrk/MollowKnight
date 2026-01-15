@@ -19,8 +19,8 @@ Bu proje, Unity Oyun Motoru kullanılarak geliştirilmiş 2D bir platform oyunud
 ### 1. Karakter Mekanikleri
 * **Oyuncu:** Yürüme, Zıplama, Dash atma ve Saldırı yapma yeteneklerine sahiptir.
 * **Düşman:**
-    * Hasar alma ve ölme.
-* **Etkileşim:** Oyuncu ve düşman birbirine hasar verebilir, can değerleri UI veya konsol üzerinden takip edilebilir.
+    * Hasar alma, ölme ve saldırma, ileri ve geri gitme, dash ile atılma ve zıplama.
+* **Etkileşim:** Oyuncu ve düşman birbirine hasar verebilir, can değerlerini konsol üzerinden takip edilebilir.
 
 ### 2. Kullanıcı Arayüzü (UI) & Menüler
 * **Ana Menü:** Oyunu Başlatma, Ayarlar ve Çıkış butonları.
