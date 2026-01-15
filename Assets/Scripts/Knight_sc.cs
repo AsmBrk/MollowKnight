@@ -124,12 +124,7 @@ public class Knight_sc : MonoBehaviour
         isDashing = false;
     }
 
-    // --- ÖNEMLİ DEĞİŞİKLİK: BURADAKİ OnTrigger SİLİNDİ ---
-    // Hasar verme işini Enemy_sc içindeki kod yapıyor.
-    // Buradaki eski kod çakışma yaratıyordu.
-
-    // --- ÖNEMLİ DEĞİŞİKLİK: PUBLIC EKLENDİ ---
-    // Artık Enemy bu fonksiyona erişebilir.
+  
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
