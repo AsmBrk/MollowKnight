@@ -36,7 +36,6 @@ public class Knight_sc : MonoBehaviour
 
     private AudioSource audioSource;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,10 +47,8 @@ public class Knight_sc : MonoBehaviour
     }
 
     void Update()
-{
-        if (isDead)
-            return;
-
+    {
+        if (isDead) return;
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
 
@@ -60,8 +57,7 @@ public class Knight_sc : MonoBehaviour
             canDash = true;
         }
 
-        if (isDashing)
-            return;
+        if (isDashing) return;
 
         horizonalInput = Input.GetAxisRaw("Horizontal");
 
@@ -70,7 +66,6 @@ public class Knight_sc : MonoBehaviour
         if (horizonalInput > 0 && !isFacingRight){
             Flip();
         }
-            
         else if (horizonalInput < 0 && isFacingRight){
             Flip();
         }
@@ -79,7 +74,6 @@ public class Knight_sc : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             audioSource.PlayOneShot(jumpSfx);
-
         }
 
         if (Input.GetKeyDown(KeyCode.C) && canDash)
@@ -98,22 +92,18 @@ public class Knight_sc : MonoBehaviour
     }
 
     void FixedUpdate()
-{
-        if (isDead || isDashing)
-            return;
+    {
+        if (isDead || isDashing) return;
 
         rb.linearVelocity = new Vector2(horizonalInput * speed, rb.linearVelocity.y);
-}
+    }
 
     void Flip()
     {
         isFacingRight = !isFacingRight;
         facingDirection *= -1; 
-
         Vector3 scaler = transform.localScale;
-        
         scaler.x *= -1;
-        
         transform.localScale = scaler;
     }
 
@@ -122,10 +112,8 @@ public class Knight_sc : MonoBehaviour
         audioSource.PlayOneShot(dashSfx);
         isDashing = true;
         rb.gravityScale = 0f; 
-        
         rb.linearVelocity = Vector2.zero; 
         rb.linearVelocity = new Vector2(facingDirection * dashSpeed, 0);
-
         Invoke(nameof(StopDash), dashTime);
     }
 
@@ -136,18 +124,16 @@ public class Knight_sc : MonoBehaviour
         isDashing = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Enemy")
-        {
-            TakeDamage(1);
-        }
-    }
+    // --- ÖNEMLİ DEĞİŞİKLİK: BURADAKİ OnTrigger SİLİNDİ ---
+    // Hasar verme işini Enemy_sc içindeki kod yapıyor.
+    // Buradaki eski kod çakışma yaratıyordu.
 
-    void TakeDamage(int damage)
+    // --- ÖNEMLİ DEĞİŞİKLİK: PUBLIC EKLENDİ ---
+    // Artık Enemy bu fonksiyona erişebilir.
+    public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log("Can: " + currentHealth);
+        Debug.Log("Knight Hasar Aldı! Kalan Can: " + currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -156,18 +142,15 @@ public class Knight_sc : MonoBehaviour
     }
 
     void Die()
-{
+    {
         if (isDead) return;
-
         isDead = true;
-
         Debug.Log("Knight öldü!");
-
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
-
         Destroy(gameObject, 1f);
-}
+    }
+
     void Attack()
     {
         audioSource.PlayOneShot(attackSfx);   
@@ -178,15 +161,14 @@ public class Knight_sc : MonoBehaviour
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPos, attackRange);
 
         foreach(Collider2D enemy in hitEnemies)
-    {
-        
-        Enemy_sc enemyScript = enemy.GetComponent<Enemy_sc>();
-        if (enemyScript != null)
         {
-            enemyScript.TakeDamage(1);
-            Debug.Log(enemy.name + " isimli düşmana vurdum!");
+            Enemy_sc enemyScript = enemy.GetComponent<Enemy_sc>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(1);
+                Debug.Log(enemy.name + " isimli düşmana vurdum!");
+            }
         }
-    }
         Debug.DrawLine(transform.position, attackPos, Color.red, 0.5f);
     }
 }
